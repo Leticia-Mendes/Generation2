@@ -1,6 +1,6 @@
 # Generation 💙
 
-### Módulo 1
+### Módulo 2
 
 <p>Olá! </p>
 
