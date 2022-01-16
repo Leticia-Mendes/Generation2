@@ -6,7 +6,6 @@ create table tb_classe(
 id int auto_increment,
 nome varchar(60) not null,
 descricao varchar(60),
-
 primary key (id)
 );
 
