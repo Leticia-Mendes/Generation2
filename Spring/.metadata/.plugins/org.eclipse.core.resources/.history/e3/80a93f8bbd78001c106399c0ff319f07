@@ -1,0 +1,11 @@
+package br.org.generation.mentalidades.controller;
+
+import org.spring.framework.ewb.bind.annotation.RequestMapping;
+import org.spring.framework.ewb.bind.annotation.RequestMapping;
+import org.spring.framework.ewb.bind.annotation.RequestMapping;
+
+
+@RestController
+public class MentalidadesController {
+
+}
