@@ -24,7 +24,7 @@ public class Tema {
 	
 	@NotBlank(message = "O atributo descrição nãoo pode ser vazio")
 	@Size(min = 5, max = 100, message = "O atributo título deve conter no mínimo 5 e no máximo 100 caaracteres")
-	private String dscricao;
+	private String descricao;
 	
 	@OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties("tema")
@@ -39,11 +39,11 @@ public class Tema {
 	}
 
 	public String getDscricao() {
-		return dscricao;
+		return descricao;
 	}
 
 	public void setDscricao(String dscricao) {
-		this.dscricao = dscricao;
+		this.descricao = dscricao;
 	}
 
 	public List<Postagem> getPostagem() {

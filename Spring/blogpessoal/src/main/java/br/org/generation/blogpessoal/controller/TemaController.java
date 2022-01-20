@@ -23,7 +23,7 @@ import br.org.generation.blogpessoal.repository.TemaRepository;
 
 @RestController
 @RequestMapping("/temas")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*") 
 public class TemaController {
 
 	@Autowired
@@ -34,17 +34,18 @@ public class TemaController {
 		return ResponseEntity.ok(temaRepository.findAll());
 	}
 	
-	/*
 	@GetMapping("/{id}")
 	public ResponseEntity<Tema> getById(@PathVariable long id) {
-		return temaRepository.findByIdTema(id)
+		return temaRepository.findById(id)
 				.map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.notFound().build());
-	} */
+	}
 	
-	// find by descricao postagem
-	
-	
+	@GetMapping("/descricao{descricao}")
+	public ResponseEntity<List<Tema>> GetByDescricao(@PathVariable String descricao) {
+		return ResponseEntity.ok(temaRepository.findAllByDescricaoContainingIgnoreCase(descricao));
+	}
+		
 	@PostMapping
 	public ResponseEntity<Tema> postTema (@Valid @RequestBody Tema tema) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(temaRepository.save(tema));
@@ -58,8 +59,13 @@ public class TemaController {
 	}
 
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable long id) {
-		temaRepository.deleteById(id);
+	public ResponseEntity<?> deleteTema(@PathVariable long id) {
+		
+		return temaRepository.findById(id)
+				.map(resposta -> {
+					temaRepository.deleteById(id);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.notFound().build());
 	}
-	
 }

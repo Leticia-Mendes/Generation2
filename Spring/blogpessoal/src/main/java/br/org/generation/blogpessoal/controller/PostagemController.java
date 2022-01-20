@@ -22,7 +22,7 @@ import br.org.generation.blogpessoal.repository.PostagemRepository;
 
 @RestController
 @RequestMapping("/postagens")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*") 
 public class PostagemController {
 	
 	@Autowired
@@ -56,12 +56,18 @@ public class PostagemController {
 				.map(resposta -> ResponseEntity.ok().body(postagemRepository.save(postagem)))
 				.orElse(ResponseEntity.notFound().build());
 	}
-
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable long id) {
-		postagemRepository.deleteById(id);
-	}
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletePostagem(@PathVariable long id) {
+		
+		return postagemRepository.findById(id)
+				.map(resposta -> {
+					postagemRepository.deleteById(id);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.notFound().build());
+	}
+
 	/*
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletePostagem(@PathVariable long id) {
