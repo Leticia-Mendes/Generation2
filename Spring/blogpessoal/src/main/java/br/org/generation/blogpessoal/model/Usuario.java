@@ -5,35 +5,47 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "tb_usuario")
+@Table(name = "tb_usuarios")
 public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id_usuario;
+	private long id;
+	
+	@NotNull(message = "O atributo Nome é Obrigatório!")
+	private String nome;
 
 	@NotNull(message = "O atributo usuario é Obrigatório!")
-	@Size(min = 3, max = 40, message = "O atributo título deve conter no mínimo 03 e no máximo 20 caracteres")
+	@Email(message = "O atributo Usuário deve ser um email válido!")
 	private String usuario;
 
-	@NotNull(message = "O atributo senha é Obrigatório!")
+	@NotBlank(message = "O atributo Senha é Obrigatório!")
 	@Size(min = 6, max = 255, message = "O atributo título deve conter no mínimo 06 e no máximo 20 caracteres")
 	private String senha;
 
-	@NotNull(message = "O atributo email é Obrigatório!")
-	@Size(min = 10, max = 40, message = "O atributo email deve conter no mínimo 10 e no máximo 30 caracteres")
-	private String email;
+	private String foto;
 
-	public long getId_usuario() {
-		return id_usuario;
+	
+	public long getId() {
+		return id;
 	}
 
-	public void setId_usuario(long id_usuario) {
-		this.id_usuario = id_usuario;
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public String getUsuario() {
@@ -52,13 +64,15 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getFoto() {
+		return foto;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
+
+	
 
 	
 }
