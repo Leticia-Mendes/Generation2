@@ -1,6 +1,8 @@
-package br.org.generation.blogpessoal.service;
+package br.com.lojadegames.service;
 
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
@@ -10,13 +12,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import br.org.generation.blogpessoal.model.UsuarioLogin;
-import br.org.generation.blogpessoal.model.Usuario;
-import br.org.generation.blogpessoal.repository.UsuarioRepository;
+import br.com.lojadegames.model.Usuario;
+import br.com.lojadegames.model.UsuarioLogin;
+import br.com.lojadegames.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
@@ -25,13 +27,17 @@ public class UsuarioService {
 		if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O Usuário já existe!", null);
 		
+		if (calcularIdade(usuario.getDataNascimento()) <18)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O Usuário é menor de idade!", null);
+			
 		usuario.setSenha(criptografarSenha(usuario.getSenha()));
+		
 		return Optional.of(usuarioRepository.save(usuario));
 	}
 	
 	public Optional<Usuario> atualizarUsuario(Usuario usuario) {
 		
-		if(usuarioRepository.findById(usuario.getId()).isPresent()) {
+		if (usuarioRepository.findById(usuario.getId()).isPresent()) {
 			Optional<Usuario> buscaUsuario = usuarioRepository.findByUsuario(usuario.getUsuario());
 			
 			if ((buscaUsuario.isPresent()) && ( buscaUsuario.get().getId() != usuario.getId()))
@@ -43,7 +49,7 @@ public class UsuarioService {
 		}
 			return Optional.empty();
 	}
-		
+	
 	public Optional<UsuarioLogin> autenticarUsuario(Optional<UsuarioLogin> usuarioLogin) {
 		Optional<Usuario> usuario = usuarioRepository.findByUsuario(usuarioLogin.get().getUsuario());
 		
@@ -52,6 +58,7 @@ public class UsuarioService {
 				usuarioLogin.get().setId(usuario.get().getId());
 				usuarioLogin.get().setNome(usuario.get().getNome());
 				usuarioLogin.get().setFoto(usuario.get().getFoto());
+				usuarioLogin.get().setDataNascimento(usuario.get().getDataNascimento());
 				usuarioLogin.get().setToken(gerarBasicToken(usuarioLogin.get().getUsuario(), usuarioLogin.get().getSenha()));
 				usuarioLogin.get().setSenha(usuario.get().getSenha());
 				return usuarioLogin;
@@ -75,5 +82,9 @@ public class UsuarioService {
 		byte[] tokenBase64 = Base64.encodeBase64(token.getBytes(Charset.forName("US-ASCII")));
 		return "Basic " + new String(tokenBase64);
 	}
-
+	
+	private int calcularIdade(LocalDate dataNascimento) {
+		return Period.between(dataNascimento, LocalDate.now()).getYears();
+	}
+	
 }

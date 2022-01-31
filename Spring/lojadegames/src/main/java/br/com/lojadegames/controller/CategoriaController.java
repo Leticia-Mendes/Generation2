@@ -59,7 +59,6 @@ public class CategoriaController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteCategoria(@PathVariable long id) {
-		
 		return categoriaRepository.findById(id)
 				.map(resposta -> {
 					categoriaRepository.deleteById(id);

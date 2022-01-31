@@ -1,8 +1,10 @@
-package br.org.generation.blogpessoal.model;
+package br.com.lojadegames.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -36,11 +39,16 @@ public class Usuario {
 	private String senha;
 
 	private String foto;
-
+	
+	@Column(name = "data_nascimento")
+	@JsonFormat(pattern = "yyy-MM-dd")
+	@NotNull(message = "O atributo Data de Nascimento é Obrigatório")
+	private LocalDate dataNascimento;
+	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
-	private List<Postagem> postagem;
-	
+	private List<Produto> produto;
+
 	
 	public long getId() {
 		return id;
@@ -82,15 +90,22 @@ public class Usuario {
 		this.foto = foto;
 	}
 
-	public List<Postagem> getPostagem() {
-		return postagem;
+	public List<Produto> getProduto() {
+		return produto;
 	}
 
-	public void setPostagem(List<Postagem> postagem) {
-		this.postagem = postagem;
+	public void setProduto(List<Produto> produto) {
+		this.produto = produto;
 	}
 
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
 	
-
+	
 	
 }
